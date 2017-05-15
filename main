@@ -1,1 +1,184 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
 
+using namespace std;
+
+class Numeric_Value
+{
+public:
+	string str;
+	int value[50];
+	int str_size;
+	Numeric_Value(string string)
+	{
+		str = string;
+		for (int i = str.size() - 1; i >= 0; i--)
+		{
+			value[i] = str[str.size() - i - 1] - '0';
+		}
+		str_size = str.size();
+	}
+};
+void input(string &str1)
+{
+	cout << "値の入力 > ";
+	cin >> str1;
+}
+void convert(string str,int *a, string str2, int *b)
+{
+	for (int i = str2.size() - 1; i >= 0; i--)
+	{
+		b[i] = str2[str2.size() - i - 1] - '0';
+	}
+
+	for (int i = str.size() - 1; i >= 0; i--)
+	{
+		a[i] = str[str.size() - i - 1] - '0';
+	}
+}
+void caluculation(Numeric_Value value1, Numeric_Value value2, int *value3, int& value3_size)
+{
+	if (value1.str.size() > value2.str_size)
+	{
+		for (int i = 0; i < value2.str.size(); i++)
+		{
+			value3[i] = value1.value[i] + value2.value[i];
+
+			if (value3[i] > 9)
+			{
+				value3[i] = value3[i] - 10;
+				value1.value[i + 1] = value1.value[i + 1] + 1;
+				cout << "繰り上がり1" << endl;
+				if (i + 1 > value2.str_size)
+				{
+					value2.str_size++;
+				}
+			}
+		}
+		for (int i = value2.str.size(); i < value1.str_size; i++)
+		{
+			value3[i] = value1.value[i];
+			if (value3[i] > 9)
+			{
+				value3[i] = value3[i] - 10;
+				value1.value[i + 1] = value1.value[i + 1] + 1;
+				if (i > value1.str_size)
+				{
+					value1.str_size++;
+				}
+			}
+		}
+		value3_size = value1.str_size;
+	}
+
+	else if (value2.str_size > value1.str_size)
+	{
+		for (int i = 0; i < value1.str_size; i++)
+		{
+			value3[i] = value1.value[i] + value2.value[i];
+			if (value3[i] > 9)
+			{
+				value3[i] = value3[i] - 10;
+				value2.value[i + 1] = value2.value[i + 1] + 1;
+				cout << "繰り上がり2" << endl;
+
+				if (i + 1 > value1.str_size)
+				{
+					value1.str_size++;
+				}
+			}
+		}
+		for (int i = value1.str.size(); i < value2.str.size(); i++)
+		{
+			value3[i] = value2.value[i];
+			if (value3[i] > 9)
+			{
+				value3[i] = value3[i] - 10;
+				value2.value[i + 1] = value2.value[i + 1] + 1;
+			}
+		}
+		value3_size = value2.str_size;
+	}
+
+	else
+	{
+		for (int i = 0; i < value1.str_size; i++)
+		{
+			value3[i] = value1.value[i] + value2.value[i];
+			if (value3[i] > 9)
+			{
+				value3[i] = value3[i] - 10;
+				value2.value[i + 1] = value2.value[i + 1] +1;
+				cout << "繰り上がり3" << endl;
+
+				if (i + 1 > value1.str_size)
+				{
+					value1.str_size++;
+				}
+			}
+		}
+		value3_size = value1.str_size;
+	}
+}
+void output(Numeric_Value value1, Numeric_Value value2, int *value3, int value3_size)
+{
+	string str;
+
+	for (int i = value2.str_size - 1; i >= 0; i--)
+	{
+		str = str += to_string(value2.value[i]);
+	}
+	cout << setw(50) << right << str << endl;
+
+	str = "";
+
+	for (int i = value1.str_size - 1; i >= 0; i--)
+	{
+		str = str += to_string(value1.value[i]);
+	}
+	cout << setw(50) << right << str << endl;
+
+	str = "";
+
+	for (int i = 0; i < 25; i++)
+	{
+		cout << "─";
+	}
+	cout << endl;
+
+	for (int i = value3_size - 1; i >= 0; i--)
+	{
+		str = str += to_string(value3[i]);
+	}
+	cout << setw(50) << right << str << endl;
+
+
+}
+int main()
+{
+	string str;
+	string str2 = "0";
+	int value3_size = 0;
+	do
+	{
+		input(str);
+
+		if (str == "0")
+		{
+			break;
+		}
+		Numeric_Value value1(str);
+		Numeric_Value value2(str2);
+		cout << value1.str.size()<< endl; cout << value1.str_size << endl;
+		int value3[50];
+		caluculation(value1,value2, value3, value3_size);
+		output(value1, value2,value3, value3_size);
+		str2 = "";
+		for (int i = value3_size-1; i >= 0; i--)
+		{
+			str2 = str2 += to_string(value3[i]);
+		}
+	} while (str != "0");
+	cout << "終了します" << endl;
+}
